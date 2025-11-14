@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Digital Panchayat Helpline - Voice for All</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      --bg1:#0f172a;--bg2:#06283d;--card:#ffffff;--glass:rgba(255,255,255,0.06);
+      --accent1:#00b4d8;--accent2:#0077b6;--accent3:#90be6d;--accent4:#ffb703;--muted:#64748b;--dark:#0b1220;
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--dark);min-height:100vh}
+    .container{max-width:1200px;margin:28px auto;padding:18px}
+
+    header{background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:18px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6);color:white}
+    .header-content{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo i{font-size:34px}
+    .logo h1{font-size:20px;margin:0}
+    .header-actions{display:flex;align-items:center;gap:10px}
+    .language-selector{background:rgba(255,255,255,0.12);padding:8px;border-radius:999px;display:flex;align-items:center;gap:8px}
+    .language-selector select{background:transparent;border:none;color:white;font-weight:600;padding:4px;outline:none}
+    .admin-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.08);padding:8px 12px;border-radius:10px;color:white;cursor:pointer}
+
+    .main-grid{display:grid;grid-template-columns:1fr 380px;gap:20px;margin-top:20px}
+    .card{background:var(--card);color:var(--dark);border-radius:12px;padding:18px;box-shadow:0 10px 30px rgba(2,6,23,0.12)}
+    .hero h2{color:var(--accent2);font-size:22px;margin:0}
+    .hero p{color:var(--muted);margin:6px 0 12px}
+
+    .btn{display:inline-block;padding:10px 16px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white}
+    .btn-secondary{background:linear-gradient(90deg,var(--accent4),#ffb84d);color:#0b1220}
+    .btn-ghost{background:transparent;border:1px solid #e6eef6;padding:8px 12px;border-radius:8px}
+
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
+    .feature{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,255,255,0.95));transition:transform .18s}
+    .feature:hover{transform:translateY(-6px)}
+    .feature i{font-size:20px;color:var(--accent2)}
+
+    .toll{padding:12px;border-radius:10px;text-align:center;background:linear-gradient(90deg,#ff7a00,#ffb703);color:white;font-weight:800;margin:12px 0}
+
+    /* form */
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .form-group{margin-bottom:12px}
+    label{display:block;margin-bottom:6px;font-weight:700;color:var(--dark);font-size:14px}
+    select,input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6;font-size:14px}
+    textarea{min-height:120px;resize:vertical}
+    .voice-controls{display:flex;gap:10px;margin-top:8px}
+    .voice-btn{background:var(--accent2);color:white;padding:10px;border-radius:999px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+
+    .status-display{display:none;margin-top:12px}
+    .status-bar{height:12px;background:#eee;border-radius:100px;overflow:hidden}
+    .status-progress{height:100%;width:0%;background:linear-gradient(90deg,var(--accent3),#50c878);transition:width .9s ease}
+    .status-steps{display:flex;justify-content:space-between;margin-top:12px;font-size:13px}
+    .step{display:flex;flex-direction:column;align-items:center;gap:6px}
+    .step .dot{width:28px;height:28px;border-radius:50%;background:#e6eef6;display:flex;align-items:center;justify-content:center;color:var(--accent2);font-weight:800}
+    .step.active .dot{background:var(--accent3);color:white}
+
+    .volunteers{display:flex;flex-wrap:wrap;gap:10px}
+    .vol-card{background:var(--glass);padding:10px;border-radius:10px;min-width:160px;color:white}
+    .tags{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.08);font-size:13px}
+
+    /* modal */
+    .modal-backdrop{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(2,6,23,0.6);display:flex;align-items:center;justify-content:center;z-index:60}
+    .modal{background:var(--card);padding:16px;border-radius:12px;width:90%;max-width:900px;box-shadow:0 20px 60px rgba(2,6,23,0.3)}
+    .modal h3{margin-top:0}
+
+    /* small */
+    footer{margin-top:18px;text-align:center;color:#cbd5e1}
+    .muted{color:var(--muted)}
+    .file-preview{max-width:100%;height:160px;object-fit:cover;border-radius:8px;margin-top:8px}
+
+    @media(max-width:980px){.main-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-hands-helping"></i>
+          <div>
+            <h1 id="header-title">Digital Panchayat Helpline</h1>
+            <div style="font-size:12px;color:rgba(255,255,255,0.9)">Voice for All — Accessible, Local, Trusted</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="language-selector">
+            <i class="fas fa-globe"></i>
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="hi">हिंदी</option>
+              <option value="ta">தமிழ்</option>
+              <option value="te">తెలుగు</option>
+              <option value="bn">বাংলা</option>
+            </select>
+          </div>
+          <button class="admin-btn" id="openAdminBtn"><i class="fas fa-user-shield"></i>&nbsp;Admin</button>
+          <button class="btn btn-primary" id="voiceIntroBtn"><i class="fas fa-volume-up"></i>&nbsp;<span id="voice-intro-text">Listen to Intro</span></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <!-- LEFT -->
+      <section>
+        <div class="card hero">
+          <h2 id="hero-title">Voice for All - Making Village Governance Simple</h2>
+          <p id="hero-description">Report issues, track resolutions, and provide feedback easily. Accessible to everyone, regardless of literacy or device availability.</p>
+
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="btn btn-secondary" id="downloadBtn"><i class="fas fa-download"></i> Download App (Demo)</button>
+            <button class="btn btn-primary" id="howItWorksBtn">How it works</button>
+          </div>
+
+          <div class="features-grid" style="margin-top:16px">
+            <div class="feature"><i class="fas fa-mobile-alt"></i><div><h4 id="feature1-title">Mobile App</h4><div class="muted">User-friendly app with localized voice flows</div></div></div>
+            <div class="feature"><i class="fas fa-phone-alt"></i><div><h4 id="feature2-title">Toll-Free Calls</h4><div class="muted">Call to register complaints (IVR keypad supported)</div></div></div>
+            <div class="feature"><i class="fas fa-sms"></i><div><h4 id="feature3-title">SMS Service</h4><div class="muted">Register via SMS from any basic phone</div></div></div>
+            <div class="feature"><i class="fas fa-desktop"></i><div><h4 id="feature4-title">Panchayat Kiosks</h4><div class="muted">In-person assistance at local offices</div></div></div>
+          </div>
+        </div>
+
+        <div class="toll card"><i class="fas fa-phone"></i>&nbsp; <span id="toll-free-text">Toll-Free Helpline: 1800-123-4567</span></div>
+
+        <div class="card" style="margin-top:12px">
+          <h3 class="section-title" id="complaint-title">Register a Complaint</h3>
+          <p id="complaint-desc" class="muted">Choose your preferred method to submit a complaint or use the form below.</p>
+
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <button class="btn btn-ghost" id="appOption"><i class="fas fa-mobile-alt"></i>&nbsp;App</button>
+            <button class="btn btn-ghost" id="callOption"><i class="fas fa-phone-alt"></i>&nbsp;Call</button>
+            <button class="btn btn-ghost" id="smsOption"><i class="fas fa-sms"></i>&nbsp;SMS</button>
+            <button class="btn btn-ghost" id="kioskOption"><i class="fas fa-desktop"></i>&nbsp;Kiosk</button>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <h4 id="form-title">Online Complaint Form</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="complaintCategory" id="category-label">Complaint Category</label>
+                <select id="complaintCategory">
+                  <option value="">Select Category</option>
+                  <option value="roads">Roads</option>
+                  <option value="electricity">Electricity</option>
+                  <option value="water">Water Supply</option>
+                  <option value="pension">Pension</option>
+                  <option value="ration">Ration Cards</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="mobileNumber">Mobile Number (optional)</label>
+                <input id="mobileNumber" placeholder="10-digit mobile number" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="complaintDescription" id="description-label">Description</label>
+              <textarea id="complaintDescription" placeholder="Describe your issue in simple words..."></textarea>
+            </div>
+
+            <div class="form-row" style="align-items:center">
+              <div class="form-group">
+                <label for="complaintPhoto" id="photo-label">Upload Photo (Optional)</label>
+                <input type="file" id="complaintPhoto" accept="image/*" />
+                <img id="photoPreview" class="file-preview" alt="" style="display:none" />
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label style="font-weight:700;color:var(--dark)">Voice Assist</label>
+                <div class="voice-controls">
+                  <button class="voice-btn" id="voiceInputBtn"><i class="fas fa-microphone"></i>&nbsp;<span id="voice-input-text">Voice Input</span></button>
+                  <button class="voice-btn" id="voicePlayBtn"><i class="fas fa-volume-up"></i>&nbsp;<span id="voice-play-text">Listen to Form</span></button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+              <button class="btn btn-primary" id="submitComplaintBtn"><span id="submit-text">Submit Complaint</span></button>
+              <div id="submissionMessage" style="color:var(--muted);font-size:13px"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Volunteers & Field Officers</h3>
+          <p class="muted" style="font-size:13px">Local volunteers help residents submit complaints, assist at kiosks and follow up with authorities.</p>
+          <div class="volunteers" id="volunteersList"></div>
+        </div>
+      </section>
+
+      <!-- RIGHT -->
+      <aside>
+        <div class="card tracker">
+          <h3 id="tracker-title">Track Your Complaint</h3>
+          <p class="muted" id="tracker-desc">Enter your complaint ID to check the status.</p>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <input id="complaintId" placeholder="Enter Complaint ID" />
+            <button class="btn btn-primary" id="trackComplaintBtn"><i class="fas fa-search"></i></button>
+          </div>
+
+          <div class="status-display" id="statusDisplay">
+            <h4 id="status-title">Complaint Status</h4>
+            <p><strong id="complaint-id-label">Complaint ID:</strong> <span id="displayId">-</span></p>
+            <p><strong id="category-display-label">Category:</strong> <span id="displayCategory">-</span></p>
+            <p><strong id="status-display-label">Status:</strong> <span id="displayStatus">-</span></p>
+
+            <div class="status-bar" style="margin-top:8px">
+              <div class="status-progress" id="statusProgress"></div>
+            </div>
+
+            <div class="status-steps" style="margin-top:12px">
+              <div class="step" id="s1"><div class="dot">1</div><div style="font-size:12px">Submitted</div></div>
+              <div class="step" id="s2"><div class="dot">2</div><div style="font-size:12px">Under Review</div></div>
+              <div class="step" id="s3"><div class="dot">3</div><div style="font-size:12px">In Progress</div></div>
+              <div class="step" id="s4"><div class="dot">4</div><div style="font-size:12px">Resolved</div></div>
+            </div>
+          </div>
+
+          <hr style="margin:12px 0;border:none;border-top:1px dashed #e6eef6">
+
+          <h4>Quick Features</h4>
+          <ul class="muted" style="font-size:13px;margin-top:8px;padding-left:18px">
+            <li>Multilingual voice-guided flows</li>
+            <li>SMS & IVR support for keypad phones</li>
+            <li>Volunteer-assisted kiosk option</li>
+            <li>Admin dashboard to view submissions</li>
+          </ul>
+        </div>
+
+        <div class="card" style="margin-top:12px;text-align:center">
+          <h4>Get Involved</h4>
+          <p class="muted" style="font-size:13px">Interested in volunteering? Click below to register as a local volunteer.</p>
+          <button class="btn btn-secondary" id="volunteerBtn"><i class="fas fa-hands-helping"></i>&nbsp;Become Volunteer</button>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <p id="footer-line1">Digital Panchayat Helpline © 2025 | A Student-Led Community Service Project</p>
+      <p id="footer-line2">Making Village Governance Simple, Transparent, and Inclusive</p>
+    </footer>
+  </div>
+
+  <!-- ADMIN MODAL -->
+  <div id="adminModal" style="display:none">
+    <div class="modal-backdrop" id="adminBackdrop">
+      <div class="modal">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3>Admin — Submissions</h3>
+          <div>
+            <button id="closeAdmin" class="btn btn-ghost">Close</button>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <button id="exportBtn" class="btn btn-primary">Export JSON</button>
+          <button id="clearBtn" class="btn btn-ghost">Clear All</button>
+        </div>
+        <div id="submissionsList" style="margin-top:12px;max-height:60vh;overflow:auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOLUNTEER SIGNUP MODAL -->
+  <div id="volModal" style="display:none">
+    <div class="modal-backdrop" id="volBackdrop">
+      <div class="modal">
+        <h3>Volunteer Registration</h3>
+        <div style="margin-top:8px">
+          <label>Name</label>
+          <input id="volName" />
+          <label style="margin-top:8px">Area / Village</label>
+          <input id="volArea" />
+          <label style="margin-top:8px">Phone</label>
+          <input id="volPhone" />
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button id="saveVol" class="btn btn-primary">Register</button>
+            <button id="closeVol" class="btn btn-ghost">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -------- translations (same as before) --------
+    const translations = { en: { /* ... keep same keys ... */ }, te: {}, hi: {} };
+    // we'll use changeLanguage only for text content we set by id in DOM
+    function changeLanguage(lang){
+      // minimal: update hero and buttons text used on page
+      const map = {
+        en: {hero:'Voice for All - Making Village Governance Simple', intro:'Listen to Intro', submit:'Submit Complaint', voiceInput:'Voice Input', voicePlay:'Listen to Form'},
+        te: {hero:'అందరికీ వాయిస్ - గ్రామ పాలనను సరళంగా మార్చడం', intro:'పరిచయాన్ని వినండి', submit:'ఫిర్యాదును సమర్పించండి', voiceInput:'వాయిస్ ఇన్పుట్', voicePlay:'ఫారంను వినండి'},
+        hi: {hero:'सभी के लिए आवाज - ग्राम शासन को सरल बनाना', intro:'परिचय सुनें', submit:'शिकायत जमा करें', voiceInput:'आवाज इनपुट', voicePlay:'फॉर्म सुनें'}
+      };
+      const m = map[lang] || map.en;
+      document.getElementById('hero-title').textContent = m.hero;
+      document.getElementById('voice-intro-text').textContent = m.intro;
+      document.getElementById('submit-text').textContent = m.submit;
+      document.getElementById('voice-input-text').textContent = m.voiceInput;
+      document.getElementById('voice-play-text').textContent = m.voicePlay;
+      document.getElementById('languageSelect').value = lang;
+    }
+    document.getElementById('languageSelect').addEventListener('change',e=>changeLanguage(e.target.value));
+    changeLanguage('en');
+
+    // -------- TTS --------
+    function speakText(text, lang){
+      if('speechSynthesis' in window){
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = (lang==='te')?'te-IN':(lang==='hi')?'hi-IN':'en-IN';
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(u);
+      } else alert('Text-to-speech not supported');
+    }
+    document.getElementById('voiceIntroBtn').addEventListener('click',()=>{
+      const lang = document.getElementById('languageSelect').value;
+      const msg = (lang==='te')? 'డిజిటల్ పంచాయతీ హెల్ప్లైన్ కు స్వాగతం' : (lang==='hi')? 'डिजिटल पंचायत हेल्पलाइन में आपका स्वागत है' : 'Welcome to Digital Panchayat Helpline';
+      speakText(msg,lang);
+    });
+
+    // -------- Speech Recognition for description --------
+    let recognition;
+    const desc = document.getElementById('complaintDescription');
+    if(('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window)){
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SR();
+      recognition.continuous = false; recognition.interimResults = false; recognition.lang = 'en-IN';
+      recognition.onresult = e=>{ const t = e.results[0][0].transcript; desc.value = desc.value ? desc.value + ' ' + t : t; }
+      recognition.onerror = ()=>alert('Voice input error or permission denied');
+    }
+    document.getElementById('voiceInputBtn').addEventListener('click',()=>{
+      const lang = document.getElementById('languageSelect').value;
+      if(!recognition){ alert(lang==='te'? 'వాయిస్ ఇన్పుట్ అందుబాటులో లేదు' : (lang==='hi'? 'वॉयस इनपुट उपलब्ध नहीं है' : 'Voice input is not available in this browser')); return; }
+      recognition.lang = (lang==='te')?'te-IN':(lang==='hi')?'hi-IN':'en-IN'; recognition.start();
+    });
+    document.getElementById('voicePlayBtn').addEventListener('click',()=>{
+      const lang = document.getElementById('languageSelect').value; const msg = (lang==='te')? 'దయచేసి ఫిర్యాదు వివరాన్నీ టైప్ చేయండి లేదా వాయిస్ ద్వారా చెప్పండి' : (lang==='hi')? 'कृपया शिकायत विवरण टाइप करें या वॉयस द्वारा बताएं' : 'Please type or speak your complaint details'; speakText(msg,lang);
+    });
+
+    // -------- Photo preview & upload handling --------
+    const photoInput = document.getElementById('complaintPhoto'); const photoPreview = document.getElementById('photoPreview');
+    photoInput.addEventListener('change', e=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f){ photoPreview.style.display='none'; return; }
+      const reader = new FileReader(); reader.onload = ev=>{ photoPreview.src = ev.target.result; photoPreview.style.display='block'; }
+      reader.readAsDataURL(f);
+    });
+
+    // -------- Storage: save complaints to localStorage (demo) --------
+    function loadSubmissions(){ return JSON.parse(localStorage.getItem('dph_subs')||'[]'); }
+    function saveSubmissions(arr){ localStorage.setItem('dph_subs', JSON.stringify(arr)); }
+
+    document.getElementById('submitComplaintBtn').addEventListener('click',()=>{
+      const category = document.getElementById('complaintCategory').value;
+      const description = document.getElementById('complaintDescription').value.trim();
+      const mobile = document.getElementById('mobileNumber').value.trim();
+      const lang = document.getElementById('languageSelect').value;
+      if(!category || !description){ alert(lang==='te'? 'దయచేసి అన్ని అవసరమైన ఫీల్డ్‌లను పూరించండి' : (lang==='hi'? 'कृपया सभी आवश्यक फ़ील्ड भरें' : 'Please fill all required fields')); return; }
+
+      const id = 'DPH-' + new Date().getFullYear() + '-' + Math.floor(10000 + Math.random()*90000);
+      const photoData = photoPreview.src && photoPreview.style.display!=='none' ? photoPreview.src : null;
+      const item = { id, category, description, mobile, photoData, created: new Date().toISOString(), status: 'Submitted' };
+      const subs = loadSubmissions(); subs.unshift(item); saveSubmissions(subs);
+
+      alert((lang==='te')? `ఫిర్యాదు సమర్పించబడింది! ID: ${id}` : (lang==='hi')? `शिकायत जमा हो गई! आईडी: ${id}` : `Complaint submitted! ID: ${id}`);
+      document.getElementById('submissionMessage').textContent = (lang==='te')? 'సేవ్ చేయడానికి ID ని గుర్తుంచుకోండి' : (lang==='hi')? 'ट्रैकिंग के लिए आईडी सहेजें' : 'Save this ID for tracking';
+
+      // reset
+      document.getElementById('complaintCategory').value=''; document.getElementById('complaintDescription').value=''; document.getElementById('complaintPhoto').value=''; photoPreview.style.display='none'; document.getElementById('mobileNumber').value='';
+
+      // refresh volunteers/admin view
+      renderSubmissionsInAdmin();
+    });
+
+    // -------- Track complaint (reads localStorage for demo) --------
+    document.getElementById('trackComplaintBtn').addEventListener('click',()=>{
+      const id = document.getElementById('complaintId').value.trim(); const lang = document.getElementById('languageSelect').value;
+      if(!id){ alert(lang==='te'? 'దయచేసి ఫిర్యాదు ID నమోదు చేయండి' : (lang==='hi'? 'कृपया शिकायत आईडी दर्ज करें' : 'Please enter a complaint ID')); return; }
+      const subs = loadSubmissions(); const found = subs.find(s=>s.id===id);
+      document.getElementById('statusDisplay').style.display='block';
+      if(found){ document.getElementById('displayId').textContent = found.id; document.getElementById('displayCategory').textContent = found.category; document.getElementById('displayStatus').textContent = found.status; const pct = (found.status==='Submitted')?25:(found.status==='Under Review')?50:(found.status==='In Progress')?75:100; document.getElementById('statusProgress').style.width = pct+'%'; updateSteps(pct); }
+      else { // fake progress demo if not found
+        const cats = ['Roads','Electricity','Water','Pension','Ration']; const cat = cats[Math.floor(Math.random()*cats.length)]; document.getElementById('displayId').textContent = id; document.getElementById('displayCategory').textContent = cat; const states=[25,50,75,100]; const pct = states[Math.floor(Math.random()*states.length)]; document.getElementById('statusProgress').style.width = pct+'%'; const statusText = (pct===25)?'Submitted':(pct===50)?'Under Review':(pct===75)?'In Progress':'Resolved'; document.getElementById('displayStatus').textContent = statusText; updateSteps(pct); }
+    });
+    function updateSteps(pct){ for(let i=1;i<=4;i++) document.getElementById('s'+i).classList.remove('active'); if(pct>=25) document.getElementById('s1').classList.add('active'); if(pct>=50) document.getElementById('s2').classList.add('active'); if(pct>=75) document.getElementById('s3').classList.add('active'); if(pct>=100) document.getElementById('s4').classList.add('active'); }
+
+    // -------- Quick actions for app/call/sms/kiosk --------
+    document.getElementById('appOption').addEventListener('click',()=>{ alert('Demo: open mobile app page (placeholder)'); });
+    document.getElementById('callOption').addEventListener('click',()=>{ window.location.href = 'tel:18001234567'; });
+    document.getElementById('smsOption').addEventListener('click',()=>{ window.location.href = 'sms:9876543210?body=COMPLAINT%20%5Bdescribe%20your%20issue%5D'; });
+    document.getElementById('kioskOption').addEventListener('click',()=>{ alert('Open kiosk locator (demo)'); });
+
+    // -------- Volunteers list & sign-up --------
+    const volunteers = [ {name:'Mala R.',area:'Village Center',phone:'987650001'}, {name:'Ramesh K.',area:'North Hamlet',phone:'987650002'}, {name:'Sunita P.',area:'East Block',phone:'987650003'} ];
+    const volWrap = document.getElementById('volunteersList'); function renderVolunteers(){ volWrap.innerHTML=''; volunteers.forEach(v=>{ const d = document.createElement('div'); d.className='vol-card'; d.innerHTML = `<h5>${v.name}</h5><div style='font-size:13px'>${v.area}</div><div style='font-size:13px;margin-top:6px'>${v.phone}</div><div class='tags' style='margin-top:8px'><div class='tag'>Helpdesk</div><div class='tag'>Follow-up</div></div>`; volWrap.appendChild(d); }); } renderVolunteers();
+    document.getElementById('volunteerBtn').addEventListener('click',()=>{ document.getElementById('volModal').style.display='block'; });
+    document.getElementById('closeVol').addEventListener('click',()=>{ document.getElementById('volModal').style.display='none'; });
+    document.getElementById('saveVol').addEventListener('click',()=>{
+      const name = document.getElementById('volName').value.trim(), area = document.getElementById('volArea').value.trim(), phone = document.getElementById('volPhone').value.trim(); if(!name||!area||!phone){ alert('Please fill all volunteer fields'); return; } volunteers.unshift({name,area,phone}); renderVolunteers(); document.getElementById('volModal').style.display='none'; alert('Thank you — volunteer registered (demo)');
+    });
+
+    // -------- Admin modal & submissions viewer --------
+    const adminModal = document.getElementById('adminModal'); document.getElementById('openAdminBtn').addEventListener('click',()=>{ adminModal.style.display='block'; renderSubmissionsInAdmin(); });
+    document.getElementById('closeAdmin').addEventListener('click',()=>{ adminModal.style.display='none'; });
+    document.getElementById('adminBackdrop').addEventListener('click',e=>{ if(e.target.id==='adminBackdrop') adminModal.style.display='none'; });
+
+    function renderSubmissionsInAdmin(){ const list = document.getElementById('submissionsList'); const subs = loadSubmissions(); if(subs.length===0) { list.innerHTML = '<div class="muted">No submissions yet (demo)</div>'; return; } list.innerHTML=''; subs.forEach(s=>{ const div = document.createElement('div'); div.style.borderBottom='1px solid #f0f4f8'; div.style.padding='10px 0'; div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${s.id}</strong><div class="muted">${new Date(s.created).toLocaleString()}</div></div><div><button class='btn btn-ghost' data-id='${s.id}'>Mark Resolved</button>&nbsp;<button class='btn btn-ghost' data-id-delete='${s.id}'>Delete</button></div></div><div style='margin-top:8px'><strong>Category:</strong> ${s.category}<br/><strong>Mobile:</strong> ${s.mobile||'-'}<br/><div style='margin-top:8px'>${s.description}</div>${s.photoData?`<div style='margin-top:8px'><img src='${s.photoData}' style='max-width:220px;border-radius:8px'></div>`:''}</div>`; list.appendChild(div); });
+
+      // wire admin buttons
+      list.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>{ const id=b.getAttribute('data-id'); const subs=loadSubmissions(); const i=subs.findIndex(x=>x.id===id); if(i>-1){ subs[i].status='Resolved'; saveSubmissions(subs); renderSubmissionsInAdmin(); alert('Marked resolved (demo)'); }}));
+      list.querySelectorAll('[data-id-delete]').forEach(b=>b.addEventListener('click',()=>{ const id=b.getAttribute('data-id-delete'); let subs=loadSubmissions(); subs=subs.filter(x=>x.id!==id); saveSubmissions(subs); renderSubmissionsInAdmin(); }));
+    }
+
+    document.getElementById('exportBtn').addEventListener('click',()=>{ const subs = loadSubmissions(); const blob = new Blob([JSON.stringify(subs,null,2)],{type:'application/json'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='dph_submissions.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); });
+    document.getElementById('clearBtn').addEventListener('click',()=>{ if(confirm('Clear all demo submissions?')){ localStorage.removeItem('dph_subs'); renderSubmissionsInAdmin(); } });
+
+    // close admin on backdrop click
+    document.getElementById('adminBackdrop').addEventListener('click', e=>{ if(e.target.id==='adminBackdrop') adminModal.style.display='none'; });
+
+    // simple helpers
+    document.getElementById('downloadBtn').addEventListener('click',()=>alert('Demo download not available in static preview'));
+    document.getElementById('howItWorksBtn').addEventListener('click',()=>{ const lang = document.getElementById('languageSelect').value; const txt = (lang==='te')? 'ఫిర్యాదు సమర్పణ → స్వీకరణ → సమీక్ష → పరిష్కారం' : (lang==='hi')? 'शिकायत सबमिट → प्राप्त → समीक्षा → समाधान' : 'Submit → Receive → Review → Resolve'; alert(txt); });
+
+    // prevent modals from blocking keyboard focus — simple escape handling
+    window.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.getElementById('adminModal').style.display='none'; document.getElementById('volModal').style.display='none'; } });
+
+    // load admin view once at start (non-visible)
+    renderSubmissionsInAdmin();
+  // --- Button Interactions Added ---
+
+// Generic safe binder
+function bind(id, handler){ const el=document.getElementById(id); if(el) el.onclick=handler; }
+
+bind('openAppBtn', ()=> alert('Opening the Digital Panchayat App... (demo)'));
+bind('callBtn', ()=> alert('Dialling Toll‑Free Number… (demo)'));
+bind('smsBtn', ()=> alert('Opening SMS App… (demo)'));
+bind('kioskBtn', ()=> alert('Nearest Digital Kiosk: Village Secretariat (demo)'));
+bind('howWorksBtn', ()=> { const sec=document.getElementById('howWorksSection'); if(sec) sec.style.display='block'; });
+bind('closeHowWorks', ()=> { const sec=document.getElementById('howWorksSection'); if(sec) sec.style.display='none'; });
+bind('downloadBtn', ()=> alert('Download will begin soon… (demo)'));
+bind('volunteerBtn', ()=> { const m=document.getElementById('volunteerModal'); if(m) m.style.display='block'; });
+bind('closeVolunteerModal', ()=> { const m=document.getElementById('volunteerModal'); if(m) m.style.display='none'; });
+bind('adminBtn', ()=> { const m=document.getElementById('adminPanel'); if(m) m.style.display='block'; });
+bind('closeAdminPanel', ()=> { const m=document.getElementById('adminPanel'); if(m) m.style.display='none'; });
+
+// Preload sample volunteer details
+const presetVolunteers = [
+  { name: 'Ravi Kumar', village: 'Ramapuram', phone: '9876543210', role: 'Water Supply Volunteer' },
+  { name: 'Sita Lakshmi', village: 'Lakshmipuram', phone: '9123456780', role: 'Health & Sanitation Volunteer' },
+  { name: 'Anil Reddy', village: 'Durgapalli', phone: '9988776655', role: 'Roads & Infrastructure Volunteer' }
+];
+
+function loadPresetVolunteers() {
+  const list = document.getElementById('volunteerList');
+  if(!list) return;
+  presetVolunteers.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vol-card';
+    card.innerHTML = `<strong>${v.name}</strong><br>Village: ${v.village}<br>Phone: ${v.phone}<br>Role: ${v.role}`;
+    list.appendChild(card);
+  });
+}
+
+window.onload = function(){ loadPresetVolunteers(); };
+
+</script>
+</body>
+</html>
