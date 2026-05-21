@@ -65,8 +65,9 @@ Users can:
 
 ## 📸 Project Preview
 
-<img width="100%" alt="Project Preview" src="https://via.placeholder.com/1200x600.png?text=Digital+Panchayat+Helpline">
+## 📸 Project Preview
 
+![Digital Panchayat Helpline](preview.png)
 ---
 
 ## 🎯 Objectives
